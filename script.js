@@ -35,7 +35,6 @@ function getComputerChoice() {
     } else {
         computerChoice = "SCISSORS"
     }
-    console.log('Computer choice:' + computerChoice)
     return computerChoice;
 }
 
@@ -44,15 +43,11 @@ function getHumanChoice() {
     let humanChoice = prompt("What is your choice: \nChoose Rock, Paper, or Scissors: ")
     humanChoice = humanChoice.toUpperCase()
     if (humanChoice == 'ROCK' || humanChoice == 'PAPER' || humanChoice == 'SCISSORS') {
-        console.log('Human choice:' + humanChoice)
         return humanChoice;
     } else {
         getHumanChoice();
     }
 }
-
-let computerScore = 0;
-let humanScore = 0;
 
 // Scoring algorithm
 // if computerChoice (cC) is Paper and humanChoice (hC) is Rock:
@@ -90,7 +85,27 @@ function playRound(computerSelection, humanSelection) {
     return printStatement;
 }
 
+// LOGIC TO PLAY THE ENTIRE GAME
+let computerScore = 0;
+let humanScore = 0;
 
-let computerSelection = getComputerChoice()
-let humanSelection = getHumanChoice()
-playRound(computerSelection, humanSelection)
+function playGame() {
+    let winnnerStatement;
+
+    for (let i=0; i<5; i++) {
+        let computerSelection = getComputerChoice()
+        let humanSelection = getHumanChoice()
+        playRound(computerSelection, humanSelection);
+    }
+
+    if (computerScore > humanScore) {
+        winnnerStatement = console.log("Computer won the Game");
+    } else if ( humanScore > computerScore) {
+        winnnerStatement = console.log("Congratulations, You won!");
+    } else {
+        winnnerStatement = console.log("It's a draw!")
+    }
+    return winnnerStatement;
+}
+
+playGame()
