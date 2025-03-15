@@ -23,6 +23,7 @@ console.log("Hello World")
 // compare computer count and human count and print -> `Computer (or Human) Won` 
 // END Game with a Thank You note
 
+// Get computer choice
 function getComputerChoice() {
     const choice = Math.random()
     let computerChoice;
@@ -38,6 +39,7 @@ function getComputerChoice() {
     return computerChoice;
 }
 
+// Get human choice
 function getHumanChoice() {
     let humanChoice = prompt("What is your choice: \nChoose Rock, Paper, or Scissors: ")
     humanChoice = humanChoice.toUpperCase()
@@ -49,5 +51,46 @@ function getHumanChoice() {
     }
 }
 
-getComputerChoice()
-getHumanChoice()
+let computerScore = 0;
+let humanScore = 0;
+
+// Scoring algorithm
+// if computerChoice (cC) is Paper and humanChoice (hC) is Rock:
+//      then computerScore (cS) is 1 and humanScore (hS) is 0
+// otherwise if cC is ROCK and hC is SCISSORS:
+//      then cS is 1 and hS is 0
+// otherwise if cC is SCISSORS and hC is PAPER:
+//      then cS is 1 and hS is 0
+// otherwise if cC = PAPER && hC = ROCK:
+//      then cS = 0, and hS = 1;
+// ... "so on for two other options where cC is SCISSORS or PAPER"
+// otherwise if cC == hC:
+//      then it is a draw
+
+function playRound(computerSelection, humanSelection) {
+    let printStatement;
+    if (
+        (computerSelection == "PAPER" && humanSelection == "ROCK") ||
+        (computerSelection == "ROCK" && humanSelection == "SCISSORS") ||
+        (computerSelection == "SCISSORS" && humanSelection == "PAPER")
+    ) {
+        computerScore++;
+        printStatement = console.log('Computer wins this round!')
+    } else if (
+        (computerSelection == "ROCK" && humanSelection == "PAPER") ||
+        (computerSelection == "SCISSORS" && humanSelection == "ROCK") ||
+        (computerSelection == "PAPER" && humanSelection == "SCISSORS")
+    ) {
+        humanScore++;
+        printStatement = console.log('Hurray! You win this round!')
+    } else {
+        printStatement = console.log('Round Results: DRAW')
+    }
+    
+    return printStatement;
+}
+
+
+let computerSelection = getComputerChoice()
+let humanSelection = getHumanChoice()
+playRound(computerSelection, humanSelection)
