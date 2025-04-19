@@ -1,27 +1,3 @@
-console.log("Hello World")
-
-// GAME FLOW
-// Decide the number of rounds to be played (5)
-//     1. Get computer choice
-//     2. Get human choice
-//     3. Compare the two choices
-//     4. Select the winner of the round
-// Repeat n times
-// Winner is the individual who wins most rounds overall
-// If there is a draw, play one more round, winner is the winner of this round
-
-// PSEUDO
-// user inserts number of rounds to be played, and save in a variable `n`
-// choices are hard coded = (rock, paper, scissors)
-// get computer choice -> `choice1` (random among the three choices)
-// get human choice -> `choice2`(non random)
-// compare the choices and decide round winner (print -> Computer won round n)
-// store number of times each competitior won in a counter variable
-//     computer counter = `c_counter`
-//     human counter = `h_counter`
-// repeat up to n rounds
-// compare computer count and human count and print -> `Computer (or Human) Won` 
-// END Game with a Thank You note
 
 // Get computer choice
 function getComputerChoice() {
@@ -38,29 +14,17 @@ function getComputerChoice() {
     return computerChoice;
 }
 
-// Get human choice
-function getHumanChoice() {
-    let humanChoice = prompt("What is your choice: \nChoose Rock, Paper, or Scissors: ")
-    humanChoice = humanChoice.toUpperCase()
-    if (humanChoice == 'ROCK' || humanChoice == 'PAPER' || humanChoice == 'SCISSORS') {
-        return humanChoice;
-    } else {
-        getHumanChoice();
-    }
-}
+let computerScore = 0;
+let humanScore = 0;
+const winningScore = 5;
 
-// Scoring algorithm
-// if computerChoice (cC) is Paper and humanChoice (hC) is Rock:
-//      then computerScore (cS) is 1 and humanScore (hS) is 0
-// otherwise if cC is ROCK and hC is SCISSORS:
-//      then cS is 1 and hS is 0
-// otherwise if cC is SCISSORS and hC is PAPER:
-//      then cS is 1 and hS is 0
-// otherwise if cC = PAPER && hC = ROCK:
-//      then cS = 0, and hS = 1;
-// ... "so on for two other options where cC is SCISSORS or PAPER"
-// otherwise if cC == hC:
-//      then it is a draw
+const buttons = document.querySelectorAll("button");
+const scores = document.querySelector("div.scores");
+const results = document.querySelector("div.game-results");
+
+function gameOver() {
+    if (humanScore >= winningScore || computerScore >= winningScore) {return true}
+};
 
 function playRound(computerSelection, humanSelection) {
     let printStatement;
@@ -70,42 +34,64 @@ function playRound(computerSelection, humanSelection) {
         (computerSelection == "SCISSORS" && humanSelection == "PAPER")
     ) {
         computerScore++;
-        printStatement = console.log('Computer wins this round!')
+        printStatement = "Computer wins this round!";
     } else if (
         (computerSelection == "ROCK" && humanSelection == "PAPER") ||
         (computerSelection == "SCISSORS" && humanSelection == "ROCK") ||
         (computerSelection == "PAPER" && humanSelection == "SCISSORS")
     ) {
         humanScore++;
-        printStatement = console.log('Hurray! You win this round!')
+        printStatement = 'Hurray! You win this round!';
     } else {
-        printStatement = console.log('Round Results: DRAW')
+        printStatement = 'Round Results: DRAW';
     }
-    
-    return printStatement;
+
+    results.textContent = printStatement;
+    scores.textContent = `Your Score: ${humanScore} vs Computer Score: ${computerScore}.`
+
+    if (gameOver()) {
+        announceWinner();
+    } else {pass};
 }
 
 // LOGIC TO PLAY THE ENTIRE GAME
-let computerScore = 0;
-let humanScore = 0;
 
-function playGame() {
-    let winnnerStatement;
+function announceWinner() {
+    const winner = humanScore >= winningScore ? "You" : "Computer";
+    results.textContent = `Game over! ${winner} won the game!`;
 
-    for (let i=0; i<5; i++) {
-        let computerSelection = getComputerChoice()
-        let humanSelection = getHumanChoice()
-        playRound(computerSelection, humanSelection);
+    // Add a reset button
+    const resetButton = document.createElement("button");
+    resetButton.textContent = "Play Again";
+    resetButton.id = "reset";
+    resetButton.addEventListener("click", resetGame);
+    results.appendChild(resetButton);
+}
+// Reset the game
+function resetGame() {
+    humanScore = 0;
+    computerScore = 0;
+    results.textContent = "Choose rock, paper, or scissors to start a new game!";
+    
+    // Remove the reset button if it exists
+    const resetButton = document.querySelector("#reset");
+    if (resetButton) {
+        resetButton.remove();
     }
-
-    if (computerScore > humanScore) {
-        winnnerStatement = console.log("Computer won the Game");
-    } else if ( humanScore > computerScore) {
-        winnnerStatement = console.log("Congratulations, You won!");
-    } else {
-        winnnerStatement = console.log("It's a draw!")
-    }
-    return winnnerStatement;
 }
 
-playGame()
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        let humanSelection = button.id;
+        let computerSelection = getComputerChoice();
+        
+        console.log(humanSelection);
+        humanSelection = humanSelection.toUpperCase();
+        playRound(computerSelection, humanSelection);
+
+
+    })
+})
+
+
+// playGame()
